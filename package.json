@@ -2,5 +2,8 @@
   "name": "my-chat-js",
   "version": "0.0.1",
   "description": "chat application running with socket.io",
-  "dependencies": {}
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
 }
