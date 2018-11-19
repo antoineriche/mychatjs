@@ -4,6 +4,7 @@
         <meta charset="utf-8" />
         <title>My Chat JS</title>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <!--
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body { font: 13px Helvetica, Arial; }
@@ -14,13 +15,19 @@
           #messages li { padding: 5px 10px; }
           #messages li:nth-child(odd) { background: #eee; }
         </style>
+    -->
     </head>
  
     <body>
+        <div>
+            <form action="" onsubmit="event.preventDefault();">
+                <input id="pseudo" autocomplete="off" />
+                <button onclick="resetPseudo()">Set pseudo</button>
+            </form>
+        </div>
         <ul id="messages"></ul>
         <form action="" onsubmit="event.preventDefault();">
           <input id="m" autocomplete="off" />
-          <!-- <button>Send</button> -->
           <button onclick="sendMessage()">Send</button>
         </form>
 
@@ -32,7 +39,10 @@
             function sendMessage() {
                 socket.emit('chat_msg', $('#m').val());
                 $('#m').val('');
-                return false;
+            }
+
+            function resetPseudo(){
+                socket.emit('reset_login', $('#pseudo').val());
             }
 
             socket.on('chat_msg', function(msg){

@@ -20,16 +20,22 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket){
   console.log('new user connected');
-  io.emit('chat_msg', 'new user');
+  // io.emit('chat_msg', 'new user');
 
   socket.on('chat_msg', function(msg){
     console.log('chat msg: ' + msg);
-    io.emit('chat_msg', msg);
+    io.emit('chat_msg', socket.login + ": " + msg);
+  });
+
+  socket.on('reset_login', function(pLogin){
+    socket.login = pLogin;
+    console.log('new login: ' + pLogin);
+    io.emit('chat_msg', 'Welcome ' + pLogin);
   });
 
   socket.on('disconnect', function(socket){
     console.log('user disconnected');
-    io.emit('chat_msg', 'user disconnected');
+    io.emit('chat_msg', 'Bye ' + socket.login);
   });
 });
 
