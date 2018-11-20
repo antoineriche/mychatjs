@@ -16,7 +16,7 @@ app.get('/', function(req, res) {
 .use(function(req, res, next){
     res.setHeader('Content-Type', 'text/plain');
     res.status(404).send('Page introuvable !');
-});
+}); 
 
 io.on('connection', function(socket){
   console.log('new user connected');
