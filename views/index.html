@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>My Chat JS</title>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+    </head>
+ 
+    <body>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="#">My Chat JS</a>
+                </div>
+
+                <form class="navbar-form navbar-right" action="" onsubmit="event.preventDefault();">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Pseudo" id="login" autocomplete="off">
+                    </div>
+                    <button onclick="resetPseudo()" class="btn btn-default">Se connecter</button>
+                </form>
+            </div><!-- /.container-fluid -->
+        </nav>
+
+        <div>
+            <div class="alert alert-success alert-dismissible hidden" role="alert" id="alert-info">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+
+    <div class="contaner-fluid">
+        <ul class="list-group" id="messages"></ul>
+        <form action="" onsubmit="event.preventDefault();">
+          <input id="m" autocomplete="off" />
+          <button onclick="sendMessage()">Send</button>
+        </form>
+    </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var pseudo = null;
+
+            // var socket = io.connect('http://localhost:8080');
+            var socket = io();
+
+            function sendMessage() {
+                if(pseudo){
+                    var msg = $('#m').val();
+                    $('#messages').append($('<li class="list-group-item">').html('<strong>'+msg+'</strong>'));
+                    socket.emit('chat_msg', msg);
+                    $('#m').val('');
+                } else {
+                    showAlert('alert-danger', "Vous n'etes pas connecté.");
+                }
+            }
+
+            function resetPseudo(){
+                socket.emit('login', $('#login').val());
+            }
+
+            function showAlert(type, msg){
+                $('#alert-info').removeClass('hidden');
+                $('#alert-info').removeClass('alert-danger');
+                $('#alert-info').removeClass('alert-success');
+                $('#alert-info').addClass('visible');
+                $('#alert-info').addClass(type);
+                $('#alert-info').html(msg);
+            }
+
+            socket.on('chat_msg', function(msg){
+                $('#messages').append($('<li class="list-group-item">').text(msg));
+            });
+
+            socket.on('welcome', function(amIWelcome){
+                if(amIWelcome){
+                    pseudo = $('#login').val();
+                    showAlert('alert-success', "Connecté en tant que <strong>"+pseudo+"</strong>");
+                } else {
+                    showAlert('alert-danger', "Vous n'etes pas connecté.");
+                    pseudo = null;
+                }
+            });
+        </script>
+
+    </body>
+</html>
