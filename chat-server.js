@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var serverless = require('serverless-http');
 var bodyParser = require('body-parser');
 var session = require("express-session")({
     secret: "my-chat-js",
@@ -84,3 +85,5 @@ io.on('connection', function(socket){
 http.listen(8080, function(){
     console.log('listening on: 8080');
 });
+
+module.exports.handler = serverless(app);
